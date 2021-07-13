@@ -79,4 +79,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		errorResponse.setMessage(ex.getMessage());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
+
+	/**
+	 * for handling application not found
+	 * @param ex
+	 * @return
+	 */
+	@ExceptionHandler(LoanApplicationNotFound.class)
+	public ResponseEntity<ApiErrorResponse> handleLoanApplicationNotFoundException(LoanApplicationNotFound ex) {
+		ApiErrorResponse errorResponse = new ApiErrorResponse(HttpStatus.NOT_FOUND);
+		errorResponse.setLocalizedMessage(ex.getLocalizedMessage());
+		errorResponse.setMessage(ex.getMessage());
+		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+	}
 }

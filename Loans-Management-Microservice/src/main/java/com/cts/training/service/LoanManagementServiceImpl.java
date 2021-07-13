@@ -1,6 +1,7 @@
 package com.cts.training.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -8,13 +9,16 @@ import java.util.Optional;
 
 import com.cts.training.exception.CollateralTypeNotFoundException;
 import com.cts.training.exception.CustomerLoanNotFoundException;
+import com.cts.training.exception.LoanApplicationNotFound;
 import com.cts.training.exception.LoanNotFoundException;
 import com.cts.training.feign.CollateralFeign;
 import com.cts.training.model.CustomerLoan;
 import com.cts.training.model.Loan;
+import com.cts.training.model.LoanApplication;
 import com.cts.training.pojo.CashDeposit;
 import com.cts.training.pojo.RealEstate;
 import com.cts.training.repo.CustomerLoanRepo;
+import com.cts.training.repo.LoanApplicationRepo;
 import com.cts.training.repo.LoanRepo;
 
 import feign.FeignException;
@@ -35,6 +39,9 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 
 	@Autowired
 	private LoanRepo loanRepo;
+
+	@Autowired
+	private LoanApplicationRepo loanApplicationRepo;
 
 	private static final String MESSAGE = "Customer Loan Not found with LoanId: ";
 
@@ -129,5 +136,16 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 				throw new CollateralTypeNotFoundException("Collateral already exists with loan id");
 			}
 		}
+	}
+
+	@Override
+	public ResponseEntity<LoanApplication> getLoanApplicationStatus(Integer applicationId) throws LoanApplicationNotFound {
+		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
+		if(op.isPresent()){
+			LoanApplication loanApplication = op.get();
+			return new ResponseEntity<>(loanApplication,HttpStatus.OK);
+		}
+		throw new LoanApplicationNotFound("Loan Application not found");
+		
 	}
 }

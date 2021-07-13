@@ -3,10 +3,13 @@ package com.cts.training.service;
 import org.springframework.http.ResponseEntity;
 
 import com.cts.training.exception.CustomerLoanNotFoundException;
+import com.cts.training.exception.LoanApplicationNotFound;
 import com.cts.training.exception.LoanNotFoundException;
 import com.cts.training.model.CustomerLoan;
+import com.cts.training.model.LoanApplication;
 import com.cts.training.pojo.CashDeposit;
 import com.cts.training.pojo.RealEstate;
+import com.cts.training.repo.LoanApplicationRepo;
 
 /**
  * LoanManagementService Interface for the loan management functionality
@@ -41,4 +44,7 @@ public interface LoanManagementService {
 	 */
 	public ResponseEntity<String> saveCashDeposit(String token, CashDeposit cashDeposit)
 			throws CustomerLoanNotFoundException, LoanNotFoundException;
+
+	public ResponseEntity<LoanApplication> getLoanApplicationStatus(Integer applicationId)
+			throws LoanApplicationNotFound;
 }

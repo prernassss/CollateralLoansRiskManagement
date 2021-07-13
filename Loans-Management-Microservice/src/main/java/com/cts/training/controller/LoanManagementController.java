@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.training.exception.CustomerLoanNotFoundException;
+import com.cts.training.exception.LoanApplicationNotFound;
 import com.cts.training.exception.LoanNotFoundException;
 import com.cts.training.feign.AuthorisationClient;
 import com.cts.training.model.CustomerLoan;
+import com.cts.training.model.LoanApplication;
 import com.cts.training.pojo.CashDeposit;
 import com.cts.training.pojo.RealEstate;
 import com.cts.training.service.LoanManagementService;
@@ -98,4 +101,12 @@ public class LoanManagementController {
 			return new ResponseEntity<>("Invalid token", HttpStatus.FORBIDDEN);
 		}
 	}
+
+	@GetMapping(value = "/getLoanApplicationStatus/{applicationId}")
+	public ResponseEntity<LoanApplication> getLoanApplicationStatus(@RequestHeader(name = "Authorization") String token,
+	@PathVariable Integer applicationId) throws LoanApplicationNotFound{
+		ResponseEntity<LoanApplication> loanApplication =  loanService.getLoanApplicationStatus(applicationId);
+		return loanApplication;
+	}
 }
+
