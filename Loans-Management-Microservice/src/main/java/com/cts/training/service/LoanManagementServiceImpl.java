@@ -138,6 +138,7 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 		}
 	}
 
+
 	@Override
 	public ResponseEntity<LoanApplication> getLoanApplicationStatus(Integer applicationId) throws LoanApplicationNotFound {
 		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
@@ -147,5 +148,35 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 		}
 		throw new LoanApplicationNotFound("Loan Application not found");
 		
+	}
+
+	@Override
+	public ResponseEntity<String> applyLoan(LoanApplication loanApplication) {
+		loanApplicationRepo.save(loanApplication);
+		return new ResponseEntity<>(loanApplication.getStatus(),HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<String> approveLoanApplication(Integer applicationId) throws LoanApplicationNotFound {
+		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
+		if(op.isPresent()){
+			LoanApplication loanApplication =  op.get();
+			loanApplication.setStatus("Accepted");
+			loanApplicationRepo.save(loanApplication);
+			return new ResponseEntity<>("Loan Application Accepted", HttpStatus.OK);
+		}
+		throw new LoanApplicationNotFound("Loan Application not found");
+	}
+
+	@Override
+	public ResponseEntity<String> rejectLoanApplication(Integer applicationId) throws LoanApplicationNotFound {
+		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
+		if(op.isPresent()){
+			LoanApplication loanApplication =  op.get();
+			loanApplication.setStatus("Rejected");
+			loanApplicationRepo.save(loanApplication);
+			return new ResponseEntity<>("Loan Application Rejected", HttpStatus.OK);
+		}
+		throw new LoanApplicationNotFound("Loan Application not found");
 	}
 }
