@@ -12,7 +12,7 @@ import lombok.Data;
 
 /**
  * Model class for customer
- * @author alka0
+ * @author rawat
  *
  */
 

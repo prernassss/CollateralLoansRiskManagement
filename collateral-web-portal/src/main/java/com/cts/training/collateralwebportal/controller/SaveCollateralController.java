@@ -15,6 +15,12 @@ public class SaveCollateralController {
 	@Autowired
     CollateralTypeService typeService;
     
+    /**
+     * 
+     * @param loan
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/savecollateral", method = RequestMethod.GET)
     public String showCollateral(@ModelAttribute("loan")Loan loan,ModelMap model) {
         return "savecollateral";

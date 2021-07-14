@@ -14,7 +14,7 @@ import com.cognizant.repository.CustomerRepo;
 
 /**
  * 
- * @author alka0
+ * @author rawat
  *
  *Service implementation class for CustomerDetailsService
  *
