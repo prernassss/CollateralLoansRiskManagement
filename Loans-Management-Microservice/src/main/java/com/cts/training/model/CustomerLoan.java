@@ -28,9 +28,9 @@ import lombok.ToString;
 public class CustomerLoan {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	@ApiModelProperty(value = "Loan Id for the Customer")
-	private Integer loanId;
+	private int loanId;
 
 	@ApiModelProperty(value = "Product Id of the respective Loan")
 	private Integer loanProductId;

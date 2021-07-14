@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * This is the main class for Authorisation class
  * 
- * @authorPOD 6
+ * @author rawat
  *
  */
 @SpringBootApplication

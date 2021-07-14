@@ -202,7 +202,6 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 		customerLoan.setInterest(10.5);
 		customerLoan.setEmi(emi);
 		customerLoan.setCollateralId(cId);
-		customerLoanRepo.save(customerLoan);
 		if(application.getCollateralDetails().equalsIgnoreCase("Real Estate")){
 			customerLoan.setLoanProductId(1001);
 		}

@@ -93,10 +93,5 @@ public class LoginServiceimpl implements LoginService {
 	@Override
 	public int getCustId(String token) {
 		return authClient.getCustId(token);
-	}
-	
-	
-
-	
-    
+	}  
 }

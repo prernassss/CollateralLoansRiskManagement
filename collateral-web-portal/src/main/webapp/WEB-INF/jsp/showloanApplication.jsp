@@ -29,13 +29,13 @@
 		<div class="row">
 			<div class="col-lg-6">
 			<a href="/portal/applyLoan">
-				<img class="image" src="/portal/image/img1.jpg" alt="Snow"
+				<img class="image" src="/portal/image/img1.jpg" alt="Apply for loan"
 					style="width: 300px; height: 300px;">
 					<p>Apply for loan</p></a>
 			</div>
 			<div class="col-lg-6">
 			<a href="/portal/getLoanApplicationStatus">
-				<img class="image" src="/portal/image/img6.jpg" alt="Mountains"
+				<img class="image" src="/portal/image/img6.jpg" alt="View application"
 					style="width: 300px; height: 300px;">
 					<p>View application status</p></a>
 			</div>

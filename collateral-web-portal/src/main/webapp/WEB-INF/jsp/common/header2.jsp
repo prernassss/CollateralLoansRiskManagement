@@ -7,7 +7,7 @@ Risk Management Portal
   </a> -->
   
 
-        <a href="/portal/customerHome" class="btn btn-info btn-lg">
+        <a href="/portal/homeCustomer" class="btn btn-info btn-lg">
           <span class="glyphicon glyphicon-log-out"></span> Go Back to Activities Page
         </a>
         

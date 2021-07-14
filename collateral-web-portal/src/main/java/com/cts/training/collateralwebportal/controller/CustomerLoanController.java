@@ -100,14 +100,7 @@ public class CustomerLoanController {
     	if(result.hasErrors()) {
     		return "applyLoan";
     	}
-    	
-    	//for getting session token to get the custId
-//    	String token=(String)request.getSession().getAttribute("token");
-//    	int custId=authClient.getCustId(token);
-    	
     	loanClient.applyLoan(loanApplication);
-    	//System.out.println(custId);
-    	//model.put("applicationId",loanApplication.getApplicationId());
         return "successfullyAppliedLoan";
     }
     
@@ -119,7 +112,7 @@ public class CustomerLoanController {
     	//System.out.println(custId);
     	ArrayList<LoanApplication> list= loanClient.viewCustLoan(custId);
     	System.out.println(list);
-    	if(list.size()!=0) {
+    	if(!list.isEmpty()) {
     		model.put("LoanList", list);
     		return "present";
     	}
@@ -133,7 +126,7 @@ public class CustomerLoanController {
     	ArrayList<LoanApplication> list=new ArrayList<>();
     	list=loanClient.getAllApplications();
      	System.out.println(list);
-     	if(list.size()!=0) {
+     	if(!list.isEmpty()) {
      		model.addAttribute("LoanList", list);
      		return "adminloanapplication";
      	}
@@ -158,7 +151,7 @@ public class CustomerLoanController {
     @ModelAttribute("collateralList")
     public List<String> getWebFrameworkList()
     {
-       List<String> collateralList = new ArrayList<String>();
+       List<String> collateralList = new ArrayList<>();
        collateralList.add("Cash Deposit");
        collateralList.add("Real Estate");
        

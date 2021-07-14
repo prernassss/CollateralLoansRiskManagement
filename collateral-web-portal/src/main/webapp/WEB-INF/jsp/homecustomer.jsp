@@ -39,13 +39,13 @@ body{
 		<div class="row">
 			<div class="col-lg-6">
 			<a href="/portal/applyloan">
-				<img class="image" src="/portal/image/img1.jpg" alt="Snow"
+				<img class="image" src="/portal/image/img1.jpg" alt="Apply Loan"
 					style="width: 300px; height: 300px;">
 					<p style="font-size:150%;">Apply For Loan</p></a>
 			</div>
 			<div class="col-lg-6">
 			<a href="/portal/getLoanApplicationStatus">
-				<img class="image" src="/portal/image/img6.jpg" alt="Mountains"
+				<img class="image" src="/portal/image/img6.jpg" alt="View Loan"
 					style="width: 300px; height: 300px;">
 					<p style="font-size:150%;">View Loan Application Status</p></a>
 			</div>

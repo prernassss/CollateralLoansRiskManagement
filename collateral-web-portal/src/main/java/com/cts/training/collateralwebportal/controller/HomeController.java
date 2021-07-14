@@ -21,7 +21,7 @@ public class HomeController {
      * 
      * @return
      */
-    @GetMapping("/homecustomer")
+    @GetMapping("/homeCustomer")
     public ModelAndView homePageCustomer(){
         ModelAndView mv = new ModelAndView("homecustomer");
         return mv;
