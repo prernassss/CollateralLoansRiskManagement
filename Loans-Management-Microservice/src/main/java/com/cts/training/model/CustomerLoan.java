@@ -1,6 +1,8 @@
 package com.cts.training.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -26,6 +28,7 @@ import lombok.ToString;
 public class CustomerLoan {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(value = "Loan Id for the Customer")
 	private Integer loanId;
 

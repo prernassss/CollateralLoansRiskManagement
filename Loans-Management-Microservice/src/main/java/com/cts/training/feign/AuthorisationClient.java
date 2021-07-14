@@ -17,4 +17,12 @@ public interface AuthorisationClient {
 	 */
 	@GetMapping("/auth/validate")
 	public boolean validate(@RequestHeader(name = "Authorization") String token);
+
+	/**
+	 * 
+	 * @param token
+	 * @return
+	 */
+	@GetMapping("/auth/validateCustomer")
+	public boolean validateCustomer(@RequestHeader(name = "Authorization") String token);
 }

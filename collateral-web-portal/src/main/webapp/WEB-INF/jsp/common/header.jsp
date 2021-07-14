@@ -16,6 +16,7 @@ Risk Management Portal
         <a href="/portal/home" class="btn btn-info btn-lg">
           <span class="glyphicon glyphicon-log-out"></span> Go Back to Activities Page
         </a>
+
         
         <a href="/portal/login" class="btn btn-info btn-lg">
           <span class="glyphicon glyphicon-log-out"></span> Log out

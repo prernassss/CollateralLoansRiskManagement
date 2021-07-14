@@ -31,12 +31,24 @@ public class LoginController {
 		mv.addObject("model", new LoginModel());
 		return mv;
 	}
+	@GetMapping("/loginAdmin")
+	public ModelAndView showLoginAdmin() {
+		ModelAndView mv = new ModelAndView("loginadmin");
+		mv.addObject("model", new LoginModel());
+		return mv;
+	}
+	@GetMapping("/loginCustomer")
+	public ModelAndView showLoginCustomer() {
+		ModelAndView mv = new ModelAndView("logincustomer");
+		mv.addObject("model", new LoginModel());
+		return mv;
+	}
 
 	@PostMapping("/login")
 	public ModelAndView performLogin(@Valid @ModelAttribute("model") LoginModel loginModel, BindingResult result,
 			ModelMap model, HttpServletRequest request) {
 		log.info("BEGIN   -   [afterLogin()]");
-		ModelAndView mv = new ModelAndView("login");
+		ModelAndView mv = new ModelAndView("loginadmin");
 		try {
 			if (result.hasErrors()) {
 				return mv;
@@ -47,6 +59,37 @@ public class LoginController {
 			return mv;
 		} catch (FeignException e) {
 			// TODO: handle exception
+			if (e.getMessage().contains("User name")) {
+				model.addAttribute("status", "Invalid Credentials!!");
+			} else if (e.getMessage().contains("Password is wrong")) {
+				model.addAttribute("status", "Invalid Credentials!!");
+			} else if (e.getMessage().contains("Invalid Credential")) {
+				model.addAttribute("status", "Invalid Credentials!!");
+			}
+			return mv;
+		}
+
+	}
+	
+	@PostMapping("/loginCustomer")
+	public ModelAndView performCustomerLogin(@Valid @ModelAttribute("model") LoginModel loginModel, BindingResult result,
+			ModelMap model, HttpServletRequest request) {
+		log.info("BEGIN   -   [afterLogin()]");
+		ModelAndView mv = new ModelAndView("logincustomer");
+		try {
+			if (result.hasErrors()) {
+				return mv;
+			}
+			String token = loginService.loginCustomer(loginModel);
+			request.getSession().setAttribute("token", token);
+			
+			//for custId
+			int custId=loginService.getCustId(token);
+			System.out.println("LoginController : "+custId);
+			
+			mv.setViewName("homecustomer");
+			return mv;
+		} catch (FeignException e) {
 			if (e.getMessage().contains("User name")) {
 				model.addAttribute("status", "Invalid Credentials!!");
 			} else if (e.getMessage().contains("Password is wrong")) {

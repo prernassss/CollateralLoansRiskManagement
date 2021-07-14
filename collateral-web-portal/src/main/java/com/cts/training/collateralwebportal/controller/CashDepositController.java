@@ -39,10 +39,12 @@ public class CashDepositController {
 		String token = "Bearer " + (String) request.getSession().getAttribute("token");
 		ResponseEntity<String> status = null;
 		try {
+			System.out.println(cash.getLoanId());
 			status = loanClient.saveCashDepositCollateral(token, cash);
 		}  catch (FeignException e) {
 			// TODO: handle exception
 			if(e.getMessage().contains("Collateral Mismatch")) {
+				System.out.println(e);
 				model.addAttribute("status", "Collateral Mismatch! Try with Valid Data.");
 			}
 			else if(e.getMessage().contains("Customer Loan Not found with LoanId")) {

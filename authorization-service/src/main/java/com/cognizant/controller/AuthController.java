@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cognizant.exception.UserNameNumericException;
 import com.cognizant.exception.UserNotFoundException;
+import com.cognizant.model.Customer;
 import com.cognizant.model.UserCredentials;
+import com.cognizant.service.CustomerDetailService;
 import com.cognizant.service.UserDetailsServiceImpl;
 import com.cognizant.util.JwtUtil;
 
@@ -33,6 +35,9 @@ public class AuthController {
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
+
+	@Autowired
+	private CustomerDetailService customerDetailsService;
 
 	@GetMapping("/health-check")
 	public ResponseEntity<String> healthCheck() {
@@ -100,4 +105,53 @@ public class AuthController {
 			}
 		}
 	}
+	@PostMapping("/loginCustomer")
+	public String loginCustomer(@RequestBody UserCredentials userCredentials) {
+
+		if (userCredentials.getUserName() == null || userCredentials.getPassword() == null
+				|| userCredentials.getUserName().trim().isEmpty() || userCredentials.getPassword().trim().isEmpty()) {
+			log.debug("Login unsuccessful --> User name or password is empty");
+			throw new UserNotFoundException("User name or password cannot be Null or Empty");
+		}
+
+		else if (jwtUtil.isNumeric(userCredentials.getUserName())) {
+			log.debug("Login unsuccessful --> User name is numeric");
+			throw new UserNameNumericException("User name is numeric");
+		}
+
+		else {
+			try {
+				UserDetails user = customerDetailsService.loadUserByUsername(userCredentials.getUserName());
+				if (user.getPassword().equals(userCredentials.getPassword())) {
+					String token = jwtUtil.generateToken(user.getUsername());
+					//System.out.println(token);
+					log.debug("Login successful");
+					return token;
+				} else {
+					log.debug("Login unsuccessful --> Invalid password");
+					throw new UserNotFoundException("Password is wrong");
+				}
+			} catch (Exception e) {
+				log.debug("Login unsuccessful --> Invalid Credential");
+				throw new UserNotFoundException("Invalid Credential");
+			}
+		}
+	}
+	
+	
+	//For returning the custId
+	@GetMapping("/getCustId")
+	public int getCustId(@RequestHeader(name = "Authorization") String token1) {
+		System.out.println(token1);
+		String token = token1.substring(7);
+		try {
+			Customer user = customerDetailsService.loadCustomerByUsername(jwtUtil.extractUsername(token1));
+			return user.getUserId();
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			return -1;
+		}
+	}
+	
 }

@@ -5,11 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 import com.cts.training.exception.CollateralTypeNotFoundException;
 import com.cts.training.exception.CustomerLoanNotFoundException;
-import com.cts.training.exception.LoanApplicationNotFound;
 import com.cts.training.exception.LoanNotFoundException;
 import com.cts.training.feign.CollateralFeign;
 import com.cts.training.model.CustomerLoan;
@@ -39,7 +40,7 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 
 	@Autowired
 	private LoanRepo loanRepo;
-
+	
 	@Autowired
 	private LoanApplicationRepo loanApplicationRepo;
 
@@ -53,7 +54,6 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 	public CustomerLoan getLoanDetails(int loanId, int customerId) throws CustomerLoanNotFoundException {
 		log.info("Get Loan details using loan id and customer id");
 		log.info(loanId+"======="+customerId);
-		System.out.println("Inside loan management service================");
 		CustomerLoan customerLoan = customerLoanRepo.findById(loanId)
 		.orElseThrow(() -> new CustomerLoanNotFoundException(MESSAGE + loanId));
 		/*
@@ -113,6 +113,7 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 	public ResponseEntity<String> saveCashDeposit(String token, CashDeposit cashDeposit)
 			throws CustomerLoanNotFoundException, LoanNotFoundException {
 		log.info("Save Cash Deposit collateral details");
+		
 		CustomerLoan customerLoan = customerLoanRepo.findById(cashDeposit.getLoanId())
 				.orElseThrow(() -> new CustomerLoanNotFoundException(MESSAGE + cashDeposit.getLoanId()));
 
@@ -137,46 +138,93 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 			}
 		}
 	}
-
-
-	@Override
-	public ResponseEntity<LoanApplication> getLoanApplicationStatus(Integer applicationId) throws LoanApplicationNotFound {
-		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
-		if(op.isPresent()){
-			LoanApplication loanApplication = op.get();
-			return new ResponseEntity<>(loanApplication,HttpStatus.OK);
-		}
-		throw new LoanApplicationNotFound("Loan Application not found");
-		
-	}
-
+	/**
+	 * Saves Loan Application to Database
+	 */
 	@Override
 	public ResponseEntity<String> applyLoan(LoanApplication loanApplication) {
 		loanApplicationRepo.save(loanApplication);
-		return new ResponseEntity<>(loanApplication.getStatus(),HttpStatus.OK);
+		return new ResponseEntity<>("Application Saved", HttpStatus.ACCEPTED);
 	}
-
+	/**
+	 * Returns list of loans taken by customer, given customer id
+	 */
 	@Override
-	public ResponseEntity<String> approveLoanApplication(Integer applicationId) throws LoanApplicationNotFound {
-		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
-		if(op.isPresent()){
-			LoanApplication loanApplication =  op.get();
-			loanApplication.setStatus("Accepted");
-			loanApplicationRepo.save(loanApplication);
-			return new ResponseEntity<>("Loan Application Accepted", HttpStatus.OK);
+	public ArrayList<LoanApplication> viewCustLoan(int custId) {
+		ArrayList<LoanApplication> list=new ArrayList<>();
+		for(LoanApplication application:loanApplicationRepo.findAll()) {
+			if(application.getCustomerId()==custId) {
+				
+				list.add(application);
+			}
 		}
-		throw new LoanApplicationNotFound("Loan Application not found");
+		
+		return list;
 	}
-
+	/**
+	 * Returns all applications that have status either Accepted/Rejected
+	 */
 	@Override
-	public ResponseEntity<String> rejectLoanApplication(Integer applicationId) throws LoanApplicationNotFound {
-		Optional<LoanApplication> op = loanApplicationRepo.findById(applicationId);
-		if(op.isPresent()){
-			LoanApplication loanApplication =  op.get();
-			loanApplication.setStatus("Rejected");
-			loanApplicationRepo.save(loanApplication);
-			return new ResponseEntity<>("Loan Application Rejected", HttpStatus.OK);
+	public ArrayList<LoanApplication> getAll(){
+		ArrayList<LoanApplication> list=new ArrayList<LoanApplication>();
+		for(LoanApplication application:loanApplicationRepo.findAll()) {
+			if(!application.getStatus().equals("Accepted") && !application.getStatus().equals("Rejected"))
+				list.add(application);
 		}
-		throw new LoanApplicationNotFound("Loan Application not found");
+		return list;
+	}
+	/**
+	 * Given application id, approve loan and add the details to customerloan table
+	 */
+	@Override
+	public ResponseEntity<String> approveLoan(Integer applicationId){
+		
+		LoanApplication application= loanApplicationRepo.findById(applicationId).get();
+		application.setStatus("Accepted");
+		loanApplicationRepo.save(application);
+		
+		
+		CustomerLoan customerLoan=new CustomerLoan();
+		Integer cId=0;
+		if(application.getCollateralDetails().equalsIgnoreCase("Cash Deposit")) {
+			cId=101;
+		}
+		else if(application.getCollateralDetails().equalsIgnoreCase("Real Estate")) {
+			Random r = new Random();
+			int low = 10;
+			int high = 100;
+			cId = r.nextInt(high-low) + low;
+		}
+		Double emi=(Double)application.getLoanAmount()/(12.0*application.getTenure());
+		customerLoan.setCustomerId(application.getCustomerId());
+		customerLoan.setLoanPrincipal(application.getLoanAmount());
+		customerLoan.setTenure(application.getTenure());
+		customerLoan.setInterest(10.5);
+		customerLoan.setEmi(emi);
+		customerLoan.setCollateralId(cId);
+		customerLoanRepo.save(customerLoan);
+		if(application.getCollateralDetails().equalsIgnoreCase("Real Estate")){
+			customerLoan.setLoanProductId(1001);
+		}
+		else {
+			customerLoan.setLoanProductId(1002);
+		}
+		customerLoanRepo.save(customerLoan);
+		
+		
+		return new ResponseEntity<>("Loan Application Accepted", HttpStatus.ACCEPTED);
+	
+	}
+	/**
+	 * Given an application id, reject loan and update it in table
+	 */ 
+	@Override
+	public ResponseEntity<String> rejectLoan(Integer applicationId){
+		
+		LoanApplication application=loanApplicationRepo.findById(applicationId).get();
+		application.setStatus("Rejected");
+		loanApplicationRepo.save(application);
+		return new ResponseEntity<>("Loan Application Rejected", HttpStatus.ACCEPTED);
+	
 	}
 }

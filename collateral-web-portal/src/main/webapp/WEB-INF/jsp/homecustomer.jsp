@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home Page</title>
+<title>Customer Home Page</title>
 <link rel="stylesheet" href="/portal/css/bootstrap.min.css">
 <link rel="stylesheet" href="/portal/css/name.css/" type="text/css" />
 <script src="/portal/js/bootstrap.min.js"></script>
@@ -21,41 +21,35 @@ body{
 </head>
 <body>
 	<%-- <jsp:include page="./common/nav.jsp" /> --%>
-	<%@ include file="common/header.jsp"%>
+		<%@ include file="common/header1.jsp"%>
+	
+	<%@ include file="common/header2.jsp"%>
 
 	<div class="container">
 
+	<!-- <h1>Activities</h1>  -->
 	<h1>
-	
+	<!-- <button type="button" class="btn btn-primary btn-lg btn-block">ACTIVTIES</button> -->
 	<button type="button" class="btn btn-secondary btn-lg btn-block">ACTIVITIES</button></h1>
-
+	<!-- <h1>
+		<a class="btn btn-deep-orange"><i class="fas fa-clone left"></i> Activities</a>
+		</h1> -->
 
 <div class="sub-container">
 		<div class="row">
-			<div class="col-lg-3">
-			<a href="/portal/customerloan">
+			<div class="col-lg-6">
+			<a href="/portal/applyloan">
 				<img class="image" src="/portal/image/img1.jpg" alt="Snow"
 					style="width: 300px; height: 300px;">
-					<p>Customer Loan Details</p></a>
+					<p style="font-size:150%;">Apply For Loan</p></a>
 			</div>
-			<div class="col-lg-3">
-			<a href="/portal/savecollateral">
-				<img class="image" src="/portal/image/img3.jpg" alt="Mountains"
+			<div class="col-lg-6">
+			<a href="/portal/getLoanApplicationStatus">
+				<img class="image" src="/portal/image/img6.jpg" alt="Mountains"
 					style="width: 300px; height: 300px;">
-					<p>Save the Collateral Details</p></a>
+					<p style="font-size:150%;">View Loan Application Status</p></a>
 			</div>
-			<div class="col-lg-3">
-			<a href="/portal/riskassessment">
-				<img class="image" src="/portal/image/img2.jpg" alt="Forest"
-					style="width: 300px; height: 300px;">
-					<p>Risk Assessment</p></a>
-			</div>
-			<div class="col-lg-3">
-				<a href="/portal/getAll">
-					<img class="image" src="/portal/image/img6.jpg" alt="Loan Application"
-						style="width: 300px; height: 300px;">
-					<p>Accept/Reject applications</p></a>
-				</div>
+			
 			
 
 		</div>

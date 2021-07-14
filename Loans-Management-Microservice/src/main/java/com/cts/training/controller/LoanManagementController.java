@@ -1,19 +1,19 @@
 package com.cts.training.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.training.exception.CustomerLoanNotFoundException;
-import com.cts.training.exception.LoanApplicationNotFound;
 import com.cts.training.exception.LoanNotFoundException;
 import com.cts.training.feign.AuthorisationClient;
 import com.cts.training.model.CustomerLoan;
@@ -96,63 +96,53 @@ public class LoanManagementController {
 	public ResponseEntity<String> saveCashDepositCollateral(@RequestHeader(name = "Authorization") String token,
 			@RequestBody CashDeposit cashDeposit) throws CustomerLoanNotFoundException, LoanNotFoundException {
 		if (authClient.validate(token)) {
+			System.out.println("Inside loan-management loanId : "+cashDeposit.getLoanId());
 			return loanService.saveCashDeposit(token, cashDeposit);
 		} else {
 			return new ResponseEntity<>("Invalid token", HttpStatus.FORBIDDEN);
 		}
 	}
-
-	/**
-	 * This method give the application status
-	 * @param token
-	 * @param applicationId
-	 * @return
-	 * @throws LoanApplicationNotFound
-	 */
-	@GetMapping(value = "/getLoanApplicationStatus/{applicationId}")
-	public ResponseEntity<LoanApplication> getLoanApplicationStatus(@RequestHeader(name = "Authorization") String token,
-	@PathVariable Integer applicationId) throws LoanApplicationNotFound{
-		return loanService.getLoanApplicationStatus(applicationId);
-	}
-
-	/**
-	 * This method takes the loan application and save it
-	 * @param token
+	
+	/** Apply for loan
 	 * @param loanApplication
 	 * @return
 	 */
-	@PostMapping(value = "/applyLoan")
-	public ResponseEntity<String> applyLoan(@RequestHeader(name = "Authorization") String token,
-	@RequestBody LoanApplication loanApplication){
+	@PostMapping(value="/applyLoan")
+	public ResponseEntity<String> applyLoan(@RequestBody LoanApplication loanApplication){
+		//System.out.println("inside loan-management-controller"+loanApplication);
 		return loanService.applyLoan(loanApplication);
 	}
-
-
-	/**
-	 * This method approve loan application
-	 * @param token
-	 * @param applicationId
+	/** Get status of loan application
+	 * @param custId
 	 * @return
-	 * @throws LoanApplicationNotFound
 	 */
-	@PutMapping(value="/approveLoanApplication/{applicationId}")
-	public ResponseEntity<String> approveLoanApplication(@RequestHeader(name = "Authorization") String token,
-	@PathVariable Integer applicationId) throws LoanApplicationNotFound{
-		return loanService.approveLoanApplication(applicationId);
+	@GetMapping(value = "/getLoanApplicationStatus")
+    public ArrayList<LoanApplication> viewLoanCust(@RequestHeader int custId) {
+		return loanService.viewCustLoan(custId);
 	}
-
-
-	/**
-	 * This method reject loan application
-	 * @param token
+	
+	/** Get All loans to display onto a table
+	 * @return
+	 */
+	@GetMapping(value="/getAll")
+	public ArrayList<LoanApplication> getAllApplications() {
+		return loanService.getAll();
+	}
+	
+	/** Accept Loan Applications
 	 * @param applicationId
 	 * @return
-	 * @throws LoanApplicationNotFound
 	 */
-	@PutMapping(value="/rejectLoanApplication/{applicationId}")
-	public ResponseEntity<String> rejectLoanApplication(@RequestHeader(name = "Authorization") String token,
-	@PathVariable Integer applicationId) throws LoanApplicationNotFound{
-		return loanService.rejectLoanApplication(applicationId);
+	@GetMapping(value="/approveLoanApplication/{applicationId}")
+	public ResponseEntity<String> approveLoan(@RequestHeader Integer applicationId){
+		return loanService.approveLoan(applicationId);
+	}
+	/** Reject Loan Applications
+	 * @param applicationId
+	 * @return
+	 */
+	@GetMapping(value="/rejectLoanApplication/{applicationId}")
+	public ResponseEntity<String> rejectLoan(@PathVariable Integer applicationId){
+		return loanService.rejectLoan(applicationId);
 	}
 }
-

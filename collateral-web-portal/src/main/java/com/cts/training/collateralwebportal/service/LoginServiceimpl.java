@@ -30,6 +30,17 @@ public class LoginServiceimpl implements LoginService {
         log.error(token);
         return token;
     }
+    
+    
+    /**
+     * For Customer
+     */
+    @Override
+	public String loginCustomer(LoginModel model) {
+		String token = authClient.loginCustomer(model);
+        log.error(token);
+        return token;
+	}
 
 	@Override
 	public ModelAndView checkStatus(HttpServletRequest request) {
@@ -37,7 +48,7 @@ public class LoginServiceimpl implements LoginService {
 		if(request.getSession().getAttribute("token")==null)
 		{
 			log.debug("User not logged in.Redirecting to login page");
-			return new ModelAndView(new RedirectView("login"));
+			return new ModelAndView(new RedirectView("loginadmin"));
 		}
 		String token=request.getSession().getAttribute("token").toString();
 		try {
@@ -53,5 +64,39 @@ public class LoginServiceimpl implements LoginService {
 		}
 		return null;
 	}
+	
+	/**
+	 * For customer
+	 */
+	@Override
+	public ModelAndView checkStatusCustomer(HttpServletRequest request) {
+		if(request.getSession().getAttribute("token")==null)
+		{
+			log.debug("User not logged in.Redirecting to login page");
+			return new ModelAndView(new RedirectView("logincustomer"));
+		}
+		String token=request.getSession().getAttribute("token").toString();
+		try {
+			if(!authClient.validateCustomer(token)) {
+				log.debug("Token is either invalid or expired. Redirecting to Customer Login Page");
+				return new ModelAndView(new RedirectView("session-expired"));
+			}
+		}
+		catch (Exception e) {
+			log.debug("Token is either invalid or expired. Redirecting to Customer login page");
+			return new ModelAndView(new RedirectView("session-expired"));
+			// TODO: handle exception
+		}
+		return null;
+	}
+
+	@Override
+	public int getCustId(String token) {
+		return authClient.getCustId(token);
+	}
+	
+	
+
+	
     
 }

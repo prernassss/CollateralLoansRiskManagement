@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CollateralRisk {
-	private int riskId;;
+	private int riskId;
 
 	private double riskPercent;
 
