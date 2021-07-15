@@ -24,6 +24,8 @@ import io.swagger.annotations.ApiOperation;
 /**
  * Controller class for collateral service
  */
+
+
 @RestController
 @CrossOrigin
 public class CollateralController {
@@ -97,7 +99,7 @@ public class CollateralController {
 				return new ResponseEntity<>("Collaterals Not Saved", HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<>("", HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>("Please Login", HttpStatus.FORBIDDEN);
 		}
 	}
 
@@ -119,7 +121,7 @@ public class CollateralController {
 				return new ResponseEntity<>("Collaterals Not Saved", HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<>("Invalid Token", HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>("Please Login", HttpStatus.FORBIDDEN);
 		}
 	}
 }
