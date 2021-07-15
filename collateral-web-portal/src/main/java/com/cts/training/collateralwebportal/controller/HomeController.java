@@ -8,24 +8,23 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
     /**
+     * Admin Home Page
      * 
-     * @return
+     * @return modelandview admin home
      */
     @GetMapping("/home")
-    public ModelAndView homePage(){
-        ModelAndView mv = new ModelAndView("home");
-        return mv;
+    public ModelAndView homePage() {
+        return new ModelAndView("home");
     }
-    
+
     /**
+     * Customer Home Page
      * 
-     * @return
+     * @return modelandview customer home
      */
     @GetMapping("/homeCustomer")
-    public ModelAndView homePageCustomer(){
-        ModelAndView mv = new ModelAndView("homecustomer");
-        return mv;
+    public ModelAndView homePageCustomer() {
+        return new ModelAndView("homecustomer");
     }
-	
-    
+
 }

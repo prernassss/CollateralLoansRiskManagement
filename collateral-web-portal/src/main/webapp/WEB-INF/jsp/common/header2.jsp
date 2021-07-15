@@ -2,9 +2,6 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <nav class="navbar navbar-light bg-dark">
- <!--  <a class="navbar-brand" href="#">
-Risk Management Portal
-  </a> -->
   
 
         <a href="/portal/homeCustomer" class="btn btn-info btn-lg">

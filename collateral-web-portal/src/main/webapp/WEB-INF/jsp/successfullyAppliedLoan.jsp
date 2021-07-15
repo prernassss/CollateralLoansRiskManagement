@@ -13,11 +13,7 @@
 <link rel="stylesheet" href="/portal/css/bootstrap.min.css">
 <link rel="stylesheet" href="/portal/css/name.css/" type="text/css" />
 <script src="/portal/js/bootstrap.min.js"></script>
-<style type="text/css">
-body{
-/* background-image: url("/portal/image/bank_background1.jpg"); */
-/* background-color: blue; */
-}
+
 </style>
 </head>
 <body>

@@ -8,61 +8,76 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cts.training.collateralwebportal.feign.LoanManagementClient;
 import com.cts.training.collateralwebportal.model.CashDeposit;
 
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class CashDepositController {
 
 	
 	@Autowired
 	private LoanManagementClient loanClient;
 
-	@RequestMapping(value = "/cashdeposit", method = RequestMethod.GET)
+	String cashDeposit = "cashdeposit";
+
+	/**
+	 * get method for showing the cash deposit page
+	 * @param cash
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = "/cashdeposit")
 	public String showCollateral(@ModelAttribute("cash") CashDeposit cash, ModelMap model) {
-		return "cashdeposit";
+		return cashDeposit;
 	}
 
-	@RequestMapping(value = "/cashdeposit", method = RequestMethod.POST)
+	/**
+	 * post method to deposit the cash
+	 * @param cash
+	 * @param res
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping(value = "/cashdeposit")
 	public String addUser(@Valid @ModelAttribute("cash") CashDeposit cash, BindingResult res, ModelMap model,
-			HttpServletRequest request) throws Exception {
+			HttpServletRequest request) {
 		if (res.hasErrors()) {
 			model.put("errorMessage", "Invalid Cash Details!");
-			return "cashdeposit";
+			return cashDeposit;
 		}
 		String token = "Bearer " + (String) request.getSession().getAttribute("token");
 		ResponseEntity<String> status = null;
+		String statusStr = "status";
 		try {
-			System.out.println(cash.getLoanId());
+			log.info("cash loan id = {}", cash.getLoanId());
 			status = loanClient.saveCashDepositCollateral(token, cash);
 		}  catch (FeignException e) {
-			// TODO: handle exception
 			if(e.getMessage().contains("Collateral Mismatch")) {
-				System.out.println(e);
-				model.addAttribute("status", "Collateral Mismatch! Try with Valid Data.");
+				model.addAttribute(statusStr, "Collateral Mismatch! Try with Valid Data.");
 			}
 			else if(e.getMessage().contains("Customer Loan Not found with LoanId")) {
-				model.addAttribute("status", "Input Mismatch! Try with Valid Data.");
+				model.addAttribute(statusStr, "Input Mismatch! Try with Valid Data.");
 			}
 			else if(e.getMessage().contains("Collateral already exists with loan id")) {
-				model.addAttribute("status", "Collateral already exists with loan ID");
+				model.addAttribute(statusStr, "Collateral already exists with loan ID");
 			}
-			return "cashdeposit";
+			return cashDeposit;
 		}
 
 		String body = status.getBody();
-		System.err.println(body);
-		model.addAttribute("status","Saved Successfully!");
+		log.error(body);
+		model.addAttribute(statusStr,"Saved Successfully!");
 
-		return "cashdeposit";
+		return cashDeposit;
 	}
-
-
-
 }

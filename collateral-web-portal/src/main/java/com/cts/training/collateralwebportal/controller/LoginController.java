@@ -22,25 +22,31 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class LoginController {
 
+	private static final String MODEL_STR = "model";
+	private static final String STATUS_STR = "status";
+	private static final String INVALID_STR = "Invalid Credentials !!";
+
 	@Autowired
 	private LoginService loginService;
 
 	@GetMapping("/login")
 	public ModelAndView showLogin() {
 		ModelAndView mv = new ModelAndView("login");
-		mv.addObject("model", new LoginModel());
+		mv.addObject(MODEL_STR, new LoginModel());
 		return mv;
 	}
+
 	@GetMapping("/loginAdmin")
 	public ModelAndView showLoginAdmin() {
 		ModelAndView mv = new ModelAndView("loginadmin");
-		mv.addObject("model", new LoginModel());
+		mv.addObject(MODEL_STR, new LoginModel());
 		return mv;
 	}
+
 	@GetMapping("/loginCustomer")
 	public ModelAndView showLoginCustomer() {
 		ModelAndView mv = new ModelAndView("logincustomer");
-		mv.addObject("model", new LoginModel());
+		mv.addObject(MODEL_STR, new LoginModel());
 		return mv;
 	}
 
@@ -58,23 +64,26 @@ public class LoginController {
 			mv.setViewName("home");
 			return mv;
 		} catch (FeignException e) {
-			// TODO: handle exception
-			if (e.getMessage().contains("User name")) {
-				model.addAttribute("status", "Invalid Credentials!!");
-			} else if (e.getMessage().contains("Password is wrong")) {
-				model.addAttribute("status", "Invalid Credentials!!");
-			} else if (e.getMessage().contains("Invalid Credential")) {
-				model.addAttribute("status", "Invalid Credentials!!");
+			if ((e.getMessage().contains("User name")) || (e.getMessage().contains("Password is wrong"))
+					|| (e.getMessage().contains("Invalid Credential"))) {
+				model.addAttribute(STATUS_STR, INVALID_STR);
 			}
 			return mv;
 		}
-
 	}
-	
+
+	/**
+	 * customer login post mapping method
+	 * 
+	 * @param loginModel
+	 * @param result
+	 * @param model
+	 * @param request
+	 * @return logincustomer on error else customer home
+	 */
 	@PostMapping("/loginCustomer")
-	public ModelAndView performCustomerLogin(@Valid @ModelAttribute("model") LoginModel loginModel, BindingResult result,
-			ModelMap model, HttpServletRequest request) {
-		log.info("BEGIN   -   [afterLogin()]");
+	public ModelAndView performCustomerLogin(@Valid @ModelAttribute("model") LoginModel loginModel,
+			BindingResult result, ModelMap model, HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("logincustomer");
 		try {
 			if (result.hasErrors()) {
@@ -82,20 +91,17 @@ public class LoginController {
 			}
 			String token = loginService.loginCustomer(loginModel);
 			request.getSession().setAttribute("token", token);
-			
-			//for custId
-			int custId=loginService.getCustId(token);
-			System.out.println("LoginController : "+custId);
-			
+
+			// for custId
+			int custId = loginService.getCustId(token);
+			log.info("custId = {}", custId);
+
 			mv.setViewName("homecustomer");
 			return mv;
 		} catch (FeignException e) {
-			if (e.getMessage().contains("User name")) {
-				model.addAttribute("status", "Invalid Credentials!!");
-			} else if (e.getMessage().contains("Password is wrong")) {
-				model.addAttribute("status", "Invalid Credentials!!");
-			} else if (e.getMessage().contains("Invalid Credential")) {
-				model.addAttribute("status", "Invalid Credentials!!");
+			if ((e.getMessage().contains("User name")) || (e.getMessage().contains("Password is wrong"))
+					|| (e.getMessage().contains("Invalid Credential"))) {
+				model.addAttribute(STATUS_STR, INVALID_STR);
 			}
 			return mv;
 		}

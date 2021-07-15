@@ -8,57 +8,54 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cts.training.collateralwebportal.feign.LoanManagementClient;
 import com.cts.training.collateralwebportal.model.RealEstate;
 
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class RealEstateController {
 
 	@Autowired
 	private LoanManagementClient loanClient;
 
-	@RequestMapping(value = "/realestate", method = RequestMethod.GET)
+	private static final String REALSTATE_STR = "reakestate";
+
+	@GetMapping(value = "/realestate")
 	public String showCollateral(@ModelAttribute("realestate") RealEstate realestate, ModelMap model) {
-		return "realestate";
+		return REALSTATE_STR;
 	}
 
-	@RequestMapping(value = "/realestate", method = RequestMethod.POST)
+	@PostMapping(value = "/realestate")
 	public String addUser(@Valid @ModelAttribute("realestate") RealEstate realestate, BindingResult res, ModelMap model,
 			HttpServletRequest request) {
-		// boolean ans=typeService.checkCollateral(loan.getCollateralType());
 		if (res.hasErrors()) {
 			model.put("errorMessage", "Invalid Real Estate Details!");
-			return "realestate";
+			return REALSTATE_STR;
 		}
 		String token = "Bearer " + (String) request.getSession().getAttribute("token");
 		ResponseEntity<String> status = null;
 		try {
 			status = loanClient.saveRealEsateCollateral(token, realestate);
 		} catch (FeignException e) {
-			// TODO: handle exception
-			if(e.getMessage().contains("Collateral Mismatch")) {
+			if (e.getMessage().contains("Collateral Mismatch")
+					|| (e.getMessage().contains("Customer Loan Not found with LoanId"))
+					|| (e.getMessage().contains("Collateral already exists with loan id"))) {
 				model.addAttribute("status", "Collateral Mismatch! Try with Valid Data.");
 			}
-			else if(e.getMessage().contains("Customer Loan Not found with LoanId")) {
-				model.addAttribute("status", "Input Mismatch! Try with Valid Data.");
-			}
-			else if(e.getMessage().contains("Collateral already exists with loan id")) {
-				model.addAttribute("status", "Collateral already exists with loan ID");
-			}
-				return "realestate";
+			return REALSTATE_STR;
 		}
 
 		String body = status.getBody();
-		System.err.println(body);
+		log.error("status body  ={}", body);
 		model.addAttribute("status", "Saved Successfully!");
-		// model.addAttribute("collateralId",model.g);
-		return "realestate";
+		return REALSTATE_STR;
 	}
 
 }

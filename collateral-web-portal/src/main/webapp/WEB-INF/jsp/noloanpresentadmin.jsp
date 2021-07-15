@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="ISO-8859-1">
 <title>Loan application</title>
@@ -19,7 +19,7 @@
 		
 			<p style="color:red;">No loans have been applied.</p>
 		
-			<table class="table table-bordered">
+			<table class="table table-bordered" aria-describedby="loan application">
 				<thead class="thead-light">
 					<tr>
 						<th scope="col">Application Id</th>

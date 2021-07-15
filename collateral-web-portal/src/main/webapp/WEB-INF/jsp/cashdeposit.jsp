@@ -1,23 +1,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="ISO-8859-1">
 <title>Loan application</title>
 <link rel="stylesheet" href="/portal/css/bootstrap.min.css">
 <link rel="stylesheet" href="/portal/css/name.css/" type="text/css" />
 <script src="/portal/js/bootstrap.min.js"></script>
-<!-- <style>
-.list{
-margin-left: 82%;
-}
-.btn {
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
-}
-</style> -->
 </head>
 <body>
 <body>

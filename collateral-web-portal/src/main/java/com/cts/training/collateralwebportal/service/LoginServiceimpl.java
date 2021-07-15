@@ -31,10 +31,7 @@ public class LoginServiceimpl implements LoginService {
         return token;
     }
     
-    
-    /**
-     * For Customer
-     */
+   
     @Override
 	public String loginCustomer(LoginModel model) {
 		String token = authClient.loginCustomer(model);
@@ -44,7 +41,6 @@ public class LoginServiceimpl implements LoginService {
 
 	@Override
 	public ModelAndView checkStatus(HttpServletRequest request) {
-		// TODO Auto-generated method stub
 		if(request.getSession().getAttribute("token")==null)
 		{
 			log.debug("User not logged in.Redirecting to login page");
@@ -60,14 +56,10 @@ public class LoginServiceimpl implements LoginService {
 		catch (Exception e) {
 			log.debug("Token is either invalid or expired. Redirecting to login page");
 			return new ModelAndView(new RedirectView("session-expired"));
-			// TODO: handle exception
 		}
 		return null;
 	}
 	
-	/**
-	 * For customer
-	 */
 	@Override
 	public ModelAndView checkStatusCustomer(HttpServletRequest request) {
 		if(request.getSession().getAttribute("token")==null)
@@ -85,7 +77,6 @@ public class LoginServiceimpl implements LoginService {
 		catch (Exception e) {
 			log.debug("Token is either invalid or expired. Redirecting to Customer login page");
 			return new ModelAndView(new RedirectView("session-expired"));
-			// TODO: handle exception
 		}
 		return null;
 	}

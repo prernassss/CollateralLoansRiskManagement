@@ -12,12 +12,7 @@
 <link rel="stylesheet" href="/portal/css/bootstrap.min.css">
 <link rel="stylesheet" href="/portal/css/name.css/" type="text/css" />
 <script src="/portal/js/bootstrap.min.js"></script>
-<style type="text/css">
-body{
-/* background-image: url("/portal/image/bank_background1.jpg"); */
-/* background-color: blue; */
-}
-</style>
+
 </head>
 <body>
 	<%-- <jsp:include page="./common/nav.jsp" /> --%>
@@ -27,13 +22,10 @@ body{
 
 	<div class="container">
 
-	<!-- <h1>Activities</h1>  -->
 	<h1>
-	<!-- <button type="button" class="btn btn-primary btn-lg btn-block">ACTIVTIES</button> -->
+	
 	<button type="button" class="btn btn-secondary btn-lg btn-block">ACTIVITIES</button></h1>
-	<!-- <h1>
-		<a class="btn btn-deep-orange"><i class="fas fa-clone left"></i> Activities</a>
-		</h1> -->
+	
 
 <div class="sub-container">
 		<div class="row">
