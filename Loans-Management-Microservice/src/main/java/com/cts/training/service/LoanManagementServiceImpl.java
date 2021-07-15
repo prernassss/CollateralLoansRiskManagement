@@ -56,12 +56,8 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 		log.info(loanId+"======="+customerId);
 		CustomerLoan customerLoan = customerLoanRepo.findById(loanId)
 		.orElseThrow(() -> new CustomerLoanNotFoundException(MESSAGE + loanId));
-		/*
-		 * Optional<CustomerLoan> customerLoan=customerLoanRepo.findById(loanId);
-		 * System.out.println(customerLoan.get()); if(!customerLoan.isPresent()) { throw
-		 * new CustomerLoanNotFoundException(MESSAGE+loanId); }
-		 */
-		System.out.println(customerLoan);
+		
+		log.info("customer loan = {}", customerLoan);
 		if (customerLoan.getCustomerId() != customerId) {
 			throw new CustomerLoanNotFoundException(MESSAGE + loanId);
 		}
@@ -77,7 +73,7 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 	public ResponseEntity<String> saveRealEstate(String token, RealEstate realEstate)
 			throws CustomerLoanNotFoundException, LoanNotFoundException {
 		log.info("Save Real Estate collateral details");
-		System.out.println("===========Saving Real Estate details============= from loan management service"+realEstate);
+		log.info("===========Saving Real Estate details============= from loan management service"+realEstate);
 		CustomerLoan customerLoan = customerLoanRepo.findById(realEstate.getLoanId())
 				.orElseThrow(() -> new CustomerLoanNotFoundException(MESSAGE + realEstate.getLoanId()));
 
@@ -166,7 +162,7 @@ public class LoanManagementServiceImpl implements LoanManagementService {
 	 */
 	@Override
 	public ArrayList<LoanApplication> getAll(){
-		ArrayList<LoanApplication> list=new ArrayList<LoanApplication>();
+		ArrayList<LoanApplication> list=new ArrayList<>();
 		for(LoanApplication application:loanApplicationRepo.findAll()) {
 			if(!application.getStatus().equals("Accepted") && !application.getStatus().equals("Rejected"))
 				list.add(application);

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 /**
- * Thsi is EntityExceptionHandler used to handle 500 INTERNAL SERVER ERROR
+ * This is EntityExceptionHandler used to handle 500 INTERNAL SERVER ERROR
  */
 @ControllerAdvice
 public class EntityExceptionHandler {

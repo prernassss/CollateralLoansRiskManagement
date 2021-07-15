@@ -46,7 +46,6 @@ public interface LoanManagementService {
 			throws CustomerLoanNotFoundException, LoanNotFoundException;
 	
 	
-	//MyCoe
 	
 	/**
 	 * For saving LoanApplication
