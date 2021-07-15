@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.cognizant.model.Customer;
 import com.cognizant.repository.CustomerRepo;
 
@@ -20,6 +22,7 @@ import com.cognizant.repository.CustomerRepo;
  *
  */
 @Service
+@Slf4j
 public class CustomerDetailService implements UserDetailsService {
 	
 	@Autowired
@@ -39,9 +42,8 @@ public class CustomerDetailService implements UserDetailsService {
 	}
 	
 	public Customer loadCustomerByUsername(String username) {
-		//System.out.println("UserName : "+username);
 		Customer cust= customerRepo.findByUserName(username);
-		//System.out.println(cust);
+		log.info("customer = {}", cust);
 		return cust;
 	}
 

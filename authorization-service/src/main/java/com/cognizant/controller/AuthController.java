@@ -22,9 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class for Authorization Controller
- * edited 2
- * edited rawat
- * edit 3
  */
 @RestController
 @Slf4j
@@ -58,7 +55,7 @@ public class AuthController {
 			UserDetails user = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
 			
 			if (jwtUtil.validateToken(token, user)) {
-				System.out.println("=================Inside Validate==================");
+				log.info("=================Inside Validate==================");
 				return new ResponseEntity<>(true, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
@@ -105,6 +102,12 @@ public class AuthController {
 			}
 		}
 	}
+
+	/**
+	 * Customer Login
+	 * @param userCredentials
+	 * @return token
+	 */
 	@PostMapping("/loginCustomer")
 	public String loginCustomer(@RequestBody UserCredentials userCredentials) {
 
@@ -124,7 +127,6 @@ public class AuthController {
 				UserDetails user = customerDetailsService.loadUserByUsername(userCredentials.getUserName());
 				if (user.getPassword().equals(userCredentials.getPassword())) {
 					String token = jwtUtil.generateToken(user.getUsername());
-					//System.out.println(token);
 					log.debug("Login successful");
 					return token;
 				} else {
@@ -139,17 +141,20 @@ public class AuthController {
 	}
 	
 	
-	//For returning the custId
+	/**
+	 * For returning customer ID
+	 * @param token1
+	 * @return custId
+	 */
 	@GetMapping("/getCustId")
 	public int getCustId(@RequestHeader(name = "Authorization") String token1) {
-		System.out.println(token1);
-		String token = token1.substring(7);
+		log.info(token1);
 		try {
 			Customer user = customerDetailsService.loadCustomerByUsername(jwtUtil.extractUsername(token1));
 			return user.getUserId();
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			log.error("error = {}", e);
 			return -1;
 		}
 	}
