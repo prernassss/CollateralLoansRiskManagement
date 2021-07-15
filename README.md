@@ -15,4 +15,4 @@
 ###### b. Accept and reject request from the portal itself
 
 #### 3. Check customer portal which is already opened in an instance of browser:
-###### a. Status would be accepted/rejected based on the admin choice.
+###### a. Status would be accepted/rejected based on the admin choice
